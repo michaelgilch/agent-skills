@@ -11,7 +11,8 @@ declare -A TARGETS=(
 
 link() {
     local name="$1"
-    local target="$2"
+    local src="$2"
+    local target="$3"
 
     mkdir -p "$(dirname "$target")"
 
@@ -23,10 +24,13 @@ link() {
         return 1
     fi
 
-    ln -s "$SKILLS_DIR" "$target"
-    echo "$name: $target -> $SKILLS_DIR"
+    ln -s "$src" "$target"
+    echo "$name: $target -> $src"
 }
 
 for name in "${!TARGETS[@]}"; do
-    link "$name" "${TARGETS[$name]}"
+    link "$name" "$SKILLS_DIR" "${TARGETS[$name]}"
 done
+
+link "fetch-usage"      "$(cd "$(dirname "$0")/claude-scripts" && pwd)/fetch-usage.sh"      "$HOME/.claude/fetch-usage.sh"
+link "statusline-command" "$(cd "$(dirname "$0")/claude-scripts" && pwd)/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
